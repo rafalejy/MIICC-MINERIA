@@ -1,0 +1,71 @@
+---
+title: "Tarea 5 Comodin"
+output: html_notebook
+---
+ 
+
+
+```{r}
+
+install.packages("randomForest")
+library(randomForest)
+
+data <- read.csv('C:/Users/rafal/OneDrive - Facultad de Ingeniería de la Universidad de San Carlos de Guatemala/Escritorio/db_csv_/MIGRACION_BDP.csv', sep=",")
+
+
+```
+
+
+```{r}
+# Instalar librerías necesarias
+if (!require("randomForest")) install.packages("randomForest")
+if (!require("caret")) install.packages("caret")
+
+# Cargar librerías
+library(randomForest)
+library(caret)
+
+
+set.seed(100)
+data <- data[sample(1:nrow(data)),]
+
+index <-sample(1:nrow(data), 0.8*nrow(data))
+
+train <- data[index,]
+test <- data[-index,]
+
+bosque <- randomForest(PEI4 ~ DEPARTAMENTO + MUNICIPIO + COD_MUNICIPIO + ZONA + AREA +PEI3 + PEI5,
+                       data = train,
+                       ntree = 100,
+                       mtry = 4
+                       )
+
+
+prueba <- predict(bosque, test)
+
+prueba
+
+matriz <- table(test$PEI4, prueba)
+
+
+plot(bosque)
+ 
+ 
+
+dato_nuevo <- data.frame(
+ DEPARTAMENTO=1,
+ MUNICIPIO=1,
+ COD_MUNICIPIO=108,
+ ZONA=10,
+ AREA=1,
+ PEI3=1,
+ PEI5=2019
+)
+
+prediccion <- predict(bosque, dato_nuevo)
+prediccion
+
+```
+
+
+`
